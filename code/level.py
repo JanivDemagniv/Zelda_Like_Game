@@ -23,8 +23,9 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visable_sprites,self.obstacles_sprites])
                 if col == 'p':
-                    Player((x,y),[self.visable_sprites])
+                    self.player = Player((x,y),[self.visable_sprites],self.obstacles_sprites)
 
     def run(self):
         #update and draw the gaem
         self.visable_sprites.draw(self.display_surface)
+        self.visable_sprites.update()
