@@ -4,6 +4,7 @@ from tile import Tile
 from player import Player
 from support import *
 from random import choice
+from debug import debug
 
 class Level:
     def __init__(self):
@@ -46,11 +47,12 @@ class Level:
 
         self.player = Player((2000,1430),[self.visable_sprites],self.obstacles_sprites)
 
+
     def run(self):
         #update and draw the gaem
         self.visable_sprites.custom_draw(self.player)
         self.visable_sprites.update()
-
+        debug(self.player.status)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
