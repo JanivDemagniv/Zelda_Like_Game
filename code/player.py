@@ -35,37 +35,38 @@ class Player(pygame.sprite.Sprite):
             self.animations[animation] = import_folder(full_path)
 
     def input(self):
-        keyboard = pygame.key.get_pressed()
-        
-        #input movement
-        if keyboard[pygame.K_UP]:
-            self.direction.y = -1
-            self.status = 'up'
-        elif keyboard[pygame.K_DOWN]:
-            self.direction.y = 1
-            self.status = 'down'
-        else:
-            self.direction.y = 0
-        if keyboard[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.status = 'right'
-        elif keyboard[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.status = 'left'
-        else:
-            self.direction.x = 0
+        if not self.attacking:
+            keyboard = pygame.key.get_pressed()
+            
+            #input movement
+            if keyboard[pygame.K_UP]:
+                self.direction.y = -1
+                self.status = 'up'
+            elif keyboard[pygame.K_DOWN]:
+                self.direction.y = 1
+                self.status = 'down'
+            else:
+                self.direction.y = 0
+            if keyboard[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.status = 'right'
+            elif keyboard[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.status = 'left'
+            else:
+                self.direction.x = 0
 
-        #input attack
-        if keyboard[pygame.K_z] and not self.attacking:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            print('attack')
-        
-        #input magic
-        if keyboard[pygame.K_x] and not self.attacking:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            print('magic')
+            #input attack
+            if keyboard[pygame.K_z]:
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
+                print('attack')
+            
+            #input magic
+            if keyboard[pygame.K_x]:
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
+                print('magic')
     
     def move(self, speed):
         if self.direction.magnitude() != 0:
