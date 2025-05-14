@@ -1,8 +1,9 @@
 import pygame
 from setting import *
 from support import *
+from entity import Entity
 
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites , create_attack, destroy_attack,create_magic):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
@@ -12,10 +13,8 @@ class Player(pygame.sprite.Sprite):
         #graphics setup
         self.import_player_assests()
         self.status = 'down'
-        self.frame_index = 0
-        self.animation_speed = 0.15
 
-        self.direction = pygame.math.Vector2()
+        #movement
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
@@ -118,16 +117,6 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.magic_index = 0
                 self.magic = list(weapon_data.keys())[self.weapon_index]
-    
-    def move(self, speed):
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
-        
-        self.hit_box.x += self.direction.x * speed
-        self.collision('horizontal')
-        self.hit_box.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hit_box.center
 
     def get_status(self):
         
@@ -149,23 +138,6 @@ class Player(pygame.sprite.Sprite):
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack','')
 
-    def collision(self,direction):
-        if direction == 'horizontal':
-            for sprite in self.obstacle_sprites:
-                if sprite.hit_box.colliderect(self.hit_box):
-                    if self.direction.x > 0:
-                        self.hit_box.right = sprite.hit_box.left
-                    if self.direction.x < 0:
-                        self.hit_box.left = sprite.hit_box.right
-        
-        if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hit_box.colliderect(self.hit_box):
-                    if self.direction.y < 0:
-                        self.hit_box.top = sprite.hit_box.bottom
-                    if self.direction.y > 0:
-                        self.hit_box.bottom = sprite.hit_box.top
-
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
 
@@ -181,7 +153,6 @@ class Player(pygame.sprite.Sprite):
         if not self.can_switch_magic:
             if current_time - self.switch_duration_cooldown >= self.magic_switch_time:
                 self.can_switch_magic = True
-                
 
     def animate(self):
         animation = self.animations[self.status]
