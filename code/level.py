@@ -53,10 +53,21 @@ class Level:
                             surf = graphics['objects'][int(col)]
                             Tile((x,y),[self.visable_sprites,self.obstacles_sprites],'object',surf)
 
-        self.player = Player((2000,1430),[self.visable_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack)
+        self.player = Player(
+            pos = (2000,1430),
+            groups = [self.visable_sprites],
+            obstacle_sprites = self.obstacles_sprites,
+            create_attack = self.create_attack,
+            destroy_attack= self.destroy_attack,
+            create_magic = self.create_magic)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visable_sprites])
+
+    def create_magic(self,style,strength,cost):
+        print(style)
+        print(strength)
+        print(cost)
 
     def destroy_attack(self):
         if self.current_attack:
