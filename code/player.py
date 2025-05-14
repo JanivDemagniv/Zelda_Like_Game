@@ -16,7 +16,6 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed = 0.15
 
         self.direction = pygame.math.Vector2()
-        self.speed = 5
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
@@ -32,6 +31,18 @@ class Player(pygame.sprite.Sprite):
         self.weapon_switch_time = None
         self.switch_duration_cooldown = 200
         
+        #stats
+        self.stats = {
+            'health':100,
+            'energy': 100,
+            'attack': 10,
+            'magic': 4,
+            'speed': 5
+        }
+        self.health = self.stats['health']
+        self.energy = self.stats['energy']
+        self.exp = 123
+        self.speed = self.stats['speed']
 
     def import_player_assests(self):
         player_path = 'graphics/player/'
@@ -79,7 +90,7 @@ class Player(pygame.sprite.Sprite):
                 print('magic')
 
             #input weapon switch
-            if keyboard[pygame.K_q] and self.can_switch_weapon:
+            if keyboard[pygame.K_a] and self.can_switch_weapon:
                 self.can_switch_weapon = False
                 self.weapon_switch_time = pygame.time.get_ticks()
                 if self.weapon_index < len(list(weapon_data.keys())) - 1:
