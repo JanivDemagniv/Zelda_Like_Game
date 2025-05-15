@@ -4,7 +4,7 @@ from entity import Entity
 from support import *
 
 class Enemy(Entity):
-    def __init__(self,monster_name,pos,obstacle_sprites,damage_player,groups):
+    def __init__(self,monster_name,pos,obstacle_sprites,damage_player,triger_death_particale,groups):
         
         #general setup      
         super().__init__(groups)
@@ -38,6 +38,7 @@ class Enemy(Entity):
         self.attack_time = None
         self.attack_cooldown = 400
         self.damage_player = damage_player
+        self.triger_death_particale = triger_death_particale
 
         #invincibility timer
         self.vulnerable = True
@@ -130,7 +131,10 @@ class Enemy(Entity):
 
     def check_death(self):
         if self.health <= 0:
+            print(self.monster_name)
+            print(self.rect.center)
             self.kill()
+            self.triger_death_particale(self.monster_name,self.rect.center)
 
     def update(self):
         self.hit_reaction()

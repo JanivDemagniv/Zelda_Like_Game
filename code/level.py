@@ -3,11 +3,12 @@ from setting import *
 from tile import Tile
 from player import Player
 from support import *
-from random import choice
+from random import choice , randint
 from debug import debug
 from weapon import *
 from ui import UI
 from enemy import Enemy
+from particales import *
 
 class Level:
     def __init__(self):
@@ -28,6 +29,9 @@ class Level:
 
         #player interface
         self.ui = UI()
+
+        #particales
+        self.animation_player = AnimationPlayer()
 
     def create_map(self):
         layouts = {
@@ -83,6 +87,7 @@ class Level:
                                     pos = (x,y),
                                     obstacle_sprites = self.obstacles_sprites,
                                     damage_player = self.damage_player,
+                                    triger_death_particale= self.triger_death_particales,
                                     groups = [self.visable_sprites, self.attackable_sprites])
 
     def create_attack(self):
@@ -105,6 +110,10 @@ class Level:
                 if collision_sprites:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'grass':
+                            pos = target_sprite.rect.center
+                            offset = pygame.math.Vector2(0,75)
+                            for leaf in range(randint(3,6)):
+                                self.animation_player.create_grass_particales(pos - offset,self.visable_sprites)
                             target_sprite.kill()
                         else:
                             target_sprite.get_damage(self.player,attack_sprite.sprite_type)
@@ -114,6 +123,10 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
+            self.animation_player.create_particales(attack_type,self.player.rect.center,[self.visable_sprites])
+
+    def triger_death_particales(self,particale_type,pos):
+        self.animation_player.create_particales(particale_type,pos,self.visable_sprites)
 
     def run(self):
         #update and draw the gaem
