@@ -9,6 +9,7 @@ from weapon import *
 from ui import UI
 from enemy import Enemy
 from particales import *
+from magic import MagicPlayer
 
 class Level:
     def __init__(self):
@@ -32,6 +33,7 @@ class Level:
 
         #particales
         self.animation_player = AnimationPlayer()
+        self.magic_player = MagicPlayer(self.animation_player)
 
     def create_map(self):
         layouts = {
@@ -94,9 +96,12 @@ class Level:
         self.current_attack = Weapon(player = self.player,groups = [self.visable_sprites, self.attack_sprites])
 
     def create_magic(self,style,strength,cost):
-        print(style)
-        print(strength)
-        print(cost)
+        if style == 'heal':
+            self.magic_player.heal(self.player,strength,cost,self.visable_sprites)
+
+        if style == 'flame':
+            self.magic_player.flame(self.player,cost,[self.visable_sprites,self.attack_sprites])
+
 
     def destroy_attack(self):
         if self.current_attack:
