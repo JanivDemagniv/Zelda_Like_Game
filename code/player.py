@@ -8,7 +8,7 @@ class Player(Entity):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
-        self.hit_box = self.rect.inflate(-10,-26)
+        self.hit_box = self.rect.inflate(-6,HITBOX_OFFSET['player'])
 
         #graphics setup
         self.import_player_assests()
@@ -69,6 +69,10 @@ class Player(Entity):
         self.hurt_time = None
         self.invulnerabiliry_duration = 500
 
+        #import sound
+        self.player_attack_sound = pygame.mixer.Sound('audio/sword.wav')
+        self.player_attack_sound.set_volume(0.4)
+
     def import_player_assests(self):
         player_path = 'graphics/player/'
         self.animations = {'up': [], 'down': [], 'right': [], 'left': [],
@@ -107,6 +111,7 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
+                self.player_attack_sound.play()
             
             #input magic
             if keyboard[pygame.K_x]:

@@ -3,6 +3,14 @@ HEIGHT = 720
 FPS = 60
 TILESIZE = 64
 
+#offset
+HITBOX_OFFSET = {
+    'player': -26,
+    'object': -40,
+    'grass': -10,
+    'invisible': 0
+}
+
 #UI
 BAR_HEIGHT = 20
 HEALTH_BAT_WIDTH = 200
