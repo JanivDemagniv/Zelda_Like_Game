@@ -10,11 +10,13 @@ from ui import UI
 from enemy import Enemy
 from particales import *
 from magic import MagicPlayer
+from upgrade import Upgrade
 
 class Level:
     def __init__(self):
         #display surface
         self.display_surface = pygame.display.get_surface()
+        self.game_pused = False
         
         #sprites groups setups
         self.visable_sprites = YSortCameraGroup()
@@ -30,6 +32,7 @@ class Level:
 
         #player interface
         self.ui = UI()
+        self.upgrade = Upgrade(self.player)
 
         #particales
         self.animation_player = AnimationPlayer()
@@ -90,6 +93,7 @@ class Level:
                                     obstacle_sprites = self.obstacles_sprites,
                                     damage_player = self.damage_player,
                                     triger_death_particale= self.triger_death_particales,
+                                    add_exp= self.add_exp,
                                     groups = [self.visable_sprites, self.attackable_sprites])
 
     def create_attack(self):
@@ -101,7 +105,6 @@ class Level:
 
         if style == 'flame':
             self.magic_player.flame(self.player,cost,[self.visable_sprites,self.attack_sprites])
-
 
     def destroy_attack(self):
         if self.current_attack:
@@ -133,13 +136,23 @@ class Level:
     def triger_death_particales(self,particale_type,pos):
         self.animation_player.create_particales(particale_type,pos,self.visable_sprites)
 
+    def add_exp(self,amount):
+        self.player.exp += amount
+
+    def toggle_menu(self):
+        self.game_pused = not self.game_pused
+
     def run(self):
-        #update and draw the gaem
         self.visable_sprites.custom_draw(self.player)
-        self.visable_sprites.update()
-        self.visable_sprites.enemny_update(self.player)
-        self.player_attack_logic()
         self.ui.display(self.player)
+
+        if self.game_pused:
+            self.upgrade.display()
+        else:
+            self.visable_sprites.update()
+            self.visable_sprites.enemny_update(self.player)
+            self.player_attack_logic()
+            
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
